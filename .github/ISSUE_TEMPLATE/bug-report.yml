@@ -1,0 +1,166 @@
+name: 🐛 Bug Report
+description: Report a problem or issue with the activities system
+title: "[BUG] "
+labels: ["bug", "teacher-report"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Bug Report
+        
+        Use this template to report problems with the school activities system. Please provide as much detail as possible to help identify and fix the issue.
+        
+        **For Copilot Agent:** This is a bug report that needs investigation and fixing. Focus on the specific problem described and verify the expected vs actual behavior.
+
+  - type: dropdown
+    id: bug_area
+    attributes:
+      label: What area of the system has the problem?
+      description: Where did you encounter this issue?
+      options:
+        - Student registration/signup
+        - Teacher login
+        - Activity display/listing
+        - Activity details/information
+        - Student management (add/remove students)
+        - Website loading/performance
+        - Mobile/tablet display
+        - Other (describe below)
+    validations:
+      required: true
+
+  - type: textarea
+    id: what_happened
+    attributes:
+      label: What happened?
+      description: Describe what you were trying to do and what went wrong
+      placeholder: "e.g., When I tried to register Sarah for Chess Club, I got an error message saying 'Failed to update activity'"
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected_behavior
+    attributes:
+      label: What should have happened?
+      description: Describe what you expected to happen instead
+      placeholder: "e.g., Sarah should have been added to the Chess Club participant list and I should see a success message"
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps_to_reproduce
+    attributes:
+      label: Steps to Reproduce
+      description: List the exact steps to reproduce this problem
+      placeholder: |
+        1. Go to the activities page
+        2. Click on 'Chess Club'
+        3. Enter student email 'sarah@mergington.edu'
+        4. Click 'Register'
+        5. See error message
+      value: |
+        1. 
+        2. 
+        3. 
+        4. 
+    validations:
+      required: true
+
+  - type: dropdown
+    id: frequency
+    attributes:
+      label: How often does this happen?
+      description: Does this happen every time or only sometimes?
+      options:
+        - Always (every time I try)
+        - Usually (most of the time)
+        - Sometimes (occasionally)
+        - Rarely (only happened once or twice)
+    validations:
+      required: true
+
+  - type: input
+    id: student_email
+    attributes:
+      label: Student Email (if relevant)
+      description: If this involves a specific student, what is their email?
+      placeholder: "e.g., student@mergington.edu"
+
+  - type: input
+    id: activity_name
+    attributes:
+      label: Activity Name (if relevant)
+      description: If this involves a specific activity, which one?
+      placeholder: "e.g., Chess Club, Soccer Team"
+
+  - type: textarea
+    id: error_message
+    attributes:
+      label: Error Message
+      description: If you saw an error message, please copy it exactly here
+      placeholder: "e.g., HTTP 400 Error: Already signed up for this activity"
+
+  - type: dropdown
+    id: browser
+    attributes:
+      label: What browser are you using?
+      description: This can help identify browser-specific issues
+      options:
+        - Chrome
+        - Firefox
+        - Safari
+        - Edge
+        - Other
+        - Not sure
+
+  - type: dropdown
+    id: device
+    attributes:
+      label: What device are you using?
+      description: This can help identify mobile/desktop issues
+      options:
+        - Desktop computer
+        - Laptop
+        - Tablet
+        - Phone
+        - Chromebook
+        - Other
+
+  - type: textarea
+    id: additional_context
+    attributes:
+      label: Additional Information
+      description: Any other details that might help fix this issue?
+      placeholder: "e.g., This started happening after the system was updated, it only affects certain students, etc."
+
+  - type: markdown
+    attributes:
+      value: |
+        ## Implementation Notes for Copilot Agent
+        
+        **Acceptance Criteria:**
+        - [ ] Reproduce the bug using the provided steps
+        - [ ] Identify the root cause of the issue
+        - [ ] Implement a fix that addresses the specific problem
+        - [ ] Test the fix thoroughly to ensure it works
+        - [ ] Verify the fix doesn't break existing functionality
+        
+        **Investigation Steps:**
+        1. **Reproduce the Issue:** Follow the exact steps provided to confirm the bug
+        2. **Check Error Logs:** Look for error messages in browser console or server logs
+        3. **Code Review:** Examine relevant code sections (likely in `src/backend/routers/activities.py` for API issues or `src/static/app.js` for frontend issues)
+        4. **Test Edge Cases:** Consider boundary conditions and error scenarios
+        
+        **Common Bug Areas:**
+        - **Student Registration:** Check `signup_for_activity()` function in `activities.py`
+        - **Authentication:** Verify teacher login and session management
+        - **Data Validation:** Ensure proper email format and activity name validation
+        - **Database Operations:** Check MongoDB operations and error handling
+        - **Frontend Issues:** Review JavaScript in `app.js` and HTML forms
+        
+        **Testing Requirements:**
+        - Test the specific scenario described in the bug report
+        - Test similar scenarios to ensure comprehensive fix
+        - Verify error messages are user-friendly and helpful
+        - Confirm the fix works across different browsers/devices if relevant

@@ -1,0 +1,128 @@
+name: 🎯 Add New Activity
+description: Request to add a new extracurricular activity to the system
+title: "[NEW ACTIVITY] Add "
+labels: ["enhancement", "new-activity", "teacher-request"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Adding a New Activity
+        
+        Please fill out the information below to add a new extracurricular activity. This template ensures all necessary details are provided for implementation.
+        
+        **For Copilot Agent:** This issue requests adding a new activity to the `initial_activities` dictionary in `src/backend/database.py`. All required fields must be provided.
+
+  - type: input
+    id: activity_name
+    attributes:
+      label: Activity Name
+      description: What is the name of the new activity?
+      placeholder: "e.g., Photography Club, Drama Club, Cooking Class"
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Activity Description
+      description: Provide a clear description of what students will do in this activity
+      placeholder: "e.g., Learn photography techniques and develop skills in digital image editing"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: activity_type
+    attributes:
+      label: Activity Category
+      description: What type of activity is this?
+      options:
+        - Sports/Athletics
+        - Arts/Creative
+        - Academic/Educational
+        - Technology/STEM
+        - Community Service
+        - Other
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: schedule_days
+    attributes:
+      label: Meeting Days
+      description: Which days will this activity meet? (Select all that apply)
+      options:
+        - label: Monday
+        - label: Tuesday
+        - label: Wednesday
+        - label: Thursday
+        - label: Friday
+        - label: Saturday
+        - label: Sunday
+
+  - type: input
+    id: start_time
+    attributes:
+      label: Start Time
+      description: What time does the activity start? (Use 24-hour format)
+      placeholder: "e.g., 15:30 for 3:30 PM"
+    validations:
+      required: true
+
+  - type: input
+    id: end_time
+    attributes:
+      label: End Time
+      description: What time does the activity end? (Use 24-hour format)
+      placeholder: "e.g., 17:00 for 5:00 PM"
+    validations:
+      required: true
+
+  - type: input
+    id: max_participants
+    attributes:
+      label: Maximum Participants
+      description: What is the maximum number of students that can participate?
+      placeholder: "e.g., 20"
+    validations:
+      required: true
+
+  - type: input
+    id: teacher_supervisor
+    attributes:
+      label: Supervising Teacher
+      description: Which teacher will supervise this activity?
+      placeholder: "e.g., Ms. Johnson, Mr. Smith"
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional_notes
+    attributes:
+      label: Additional Requirements or Notes
+      description: Any special requirements, equipment needs, or other important information?
+      placeholder: "e.g., Requires art supplies, meets in computer lab, outdoor weather dependent"
+
+  - type: markdown
+    attributes:
+      value: |
+        ## Implementation Notes for Copilot Agent
+        
+        **Acceptance Criteria:**
+        - [ ] Add new activity entry to `initial_activities` dictionary in `src/backend/database.py`
+        - [ ] Include all required fields: description, schedule, schedule_details, max_participants, participants (start with empty list)
+        - [ ] Follow existing format and naming conventions
+        - [ ] Ensure schedule_details includes proper days array, start_time, and end_time
+        - [ ] Verify the activity appears in the web interface after restart
+        
+        **Technical Details:**
+        - Location: `src/backend/database.py` - `initial_activities` dictionary
+        - Format: Follow existing activity structure with description, schedule, schedule_details, max_participants, participants
+        - Schedule format: Human-readable string + structured schedule_details object
+        - Time format: 24-hour format (HH:MM) for start_time and end_time
+        
+        **Testing:**
+        - Restart the application to load new activity
+        - Verify activity appears on the main page
+        - Test student registration functionality
+        - Confirm teacher can manage participants

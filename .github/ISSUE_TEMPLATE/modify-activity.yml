@@ -1,0 +1,141 @@
+name: ✏️ Modify Existing Activity
+description: Request changes to an existing extracurricular activity
+title: "[MODIFY ACTIVITY] Update "
+labels: ["enhancement", "modify-activity", "teacher-request"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Modify Existing Activity
+        
+        Use this template to request changes to an existing activity's details such as schedule, description, or participant limits.
+        
+        **For Copilot Agent:** This issue requests modifications to an existing activity in the `initial_activities` dictionary in `src/backend/database.py`.
+
+  - type: dropdown
+    id: activity_name
+    attributes:
+      label: Activity to Modify
+      description: Which activity needs to be updated?
+      options:
+        - Chess Club
+        - Programming Class
+        - Morning Fitness
+        - Soccer Team
+        - Basketball Team
+        - Art Club
+        - Math Olympiad
+        - Debate Team
+        - Weekend Robotics Workshop
+        - Science Olympiad
+        - Sunday Chess Tournament
+        - Other (specify in description)
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: changes_needed
+    attributes:
+      label: What needs to be changed?
+      description: Select all that apply
+      options:
+        - label: Activity description
+        - label: Meeting schedule/times
+        - label: Maximum participant limit
+        - label: Activity name
+        - label: Other (explain below)
+
+  - type: textarea
+    id: new_description
+    attributes:
+      label: New Description (if changing)
+      description: Provide the new description for the activity
+      placeholder: "e.g., Learn advanced chess strategies and compete in regional tournaments"
+
+  - type: checkboxes
+    id: new_schedule_days
+    attributes:
+      label: New Meeting Days (if changing)
+      description: Which days should the activity meet? (Select all that apply)
+      options:
+        - label: Monday
+        - label: Tuesday
+        - label: Wednesday
+        - label: Thursday
+        - label: Friday
+        - label: Saturday
+        - label: Sunday
+
+  - type: input
+    id: new_start_time
+    attributes:
+      label: New Start Time (if changing)
+      description: What time should the activity start? (Use 24-hour format)
+      placeholder: "e.g., 15:30 for 3:30 PM"
+
+  - type: input
+    id: new_end_time
+    attributes:
+      label: New End Time (if changing)
+      description: What time should the activity end? (Use 24-hour format)
+      placeholder: "e.g., 17:00 for 5:00 PM"
+
+  - type: input
+    id: new_max_participants
+    attributes:
+      label: New Maximum Participants (if changing)
+      description: What should the new participant limit be?
+      placeholder: "e.g., 25"
+
+  - type: input
+    id: new_activity_name
+    attributes:
+      label: New Activity Name (if changing)
+      description: What should the new name be?
+      placeholder: "e.g., Advanced Chess Club"
+
+  - type: textarea
+    id: reason_for_change
+    attributes:
+      label: Reason for Change
+      description: Why is this change needed?
+      placeholder: "e.g., Need to accommodate more students, conflicting with other activities, room availability changed"
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional_notes
+    attributes:
+      label: Additional Notes
+      description: Any other important information about these changes?
+      placeholder: "e.g., This change should take effect next semester, need to notify current participants"
+
+  - type: markdown
+    attributes:
+      value: |
+        ## Implementation Notes for Copilot Agent
+        
+        **Acceptance Criteria:**
+        - [ ] Locate the specified activity in `initial_activities` dictionary in `src/backend/database.py`
+        - [ ] Update only the specified fields while preserving existing participants and other unchanged data
+        - [ ] Ensure schedule_details object is updated to match any schedule changes
+        - [ ] Maintain proper data format and structure
+        - [ ] If activity name changes, update the dictionary key while preserving all data
+        
+        **Technical Details:**
+        - Location: `src/backend/database.py` - `initial_activities` dictionary
+        - Preserve existing participants list unless specifically requested to clear
+        - Update both human-readable schedule string and schedule_details object for time changes
+        - For name changes: create new entry with updated key, copy all data, remove old entry
+        
+        **Important:**
+        - Do not modify participant lists unless explicitly requested
+        - Maintain data consistency between schedule string and schedule_details
+        - Verify changes don't conflict with existing data structure
+        
+        **Testing:**
+        - Restart application to see changes
+        - Verify modified activity displays correctly
+        - Test that existing functionality still works
+        - Confirm participant management still functions
