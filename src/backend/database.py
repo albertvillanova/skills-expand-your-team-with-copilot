@@ -1,15 +1,106 @@
 """
-MongoDB database configuration and setup for Mergington High School API
+Database configuration and setup for Mergington High School API
 """
 
-from pymongo import MongoClient
 from argon2 import PasswordHasher
 
-# Connect to MongoDB
-client = MongoClient('mongodb://localhost:27017/')
-db = client['mergington_high']
-activities_collection = db['activities']
-teachers_collection = db['teachers']
+# In-memory database for development (fallback when MongoDB is not available)
+class InMemoryCollection:
+    def __init__(self):
+        self.data = {}
+    
+    def find_one(self, query=None):
+        if query is None:
+            query = {}
+        
+        if '_id' in query:
+            return self.data.get(query['_id'])
+        
+        # Simple search implementation
+        for key, value in self.data.items():
+            if all(value.get(k) == v for k, v in query.items() if k != '_id'):
+                return value
+        return None
+    
+    def find(self, query=None):
+        if query is None:
+            query = {}
+        
+        results = []
+        for key, value in self.data.items():
+            match = True
+            for q_key, q_val in query.items():
+                if q_key == '_id':
+                    if key != q_val:
+                        match = False
+                        break
+                elif isinstance(q_val, dict):
+                    # Handle simple MongoDB-style queries like {'$in': [...]}
+                    if '$in' in q_val:
+                        if not (value.get(q_key.replace('.', '_')) in q_val['$in'] if '.' not in q_key else 
+                               any(day in q_val['$in'] for day in value.get('schedule_details', {}).get('days', []))):
+                            match = False
+                            break
+                    elif '$gte' in q_val:
+                        val = value.get('schedule_details', {}).get(q_key.split('.')[-1]) if '.' in q_key else value.get(q_key)
+                        if not (val and val >= q_val['$gte']):
+                            match = False
+                            break
+                    elif '$lte' in q_val:
+                        val = value.get('schedule_details', {}).get(q_key.split('.')[-1]) if '.' in q_key else value.get(q_key)
+                        if not (val and val <= q_val['$lte']):
+                            match = False
+                            break
+                else:
+                    if value.get(q_key) != q_val:
+                        match = False
+                        break
+            
+            if match:
+                results.append({**value, '_id': key})
+        
+        return results
+    
+    def insert_one(self, document):
+        doc_id = document.get('_id')
+        if doc_id:
+            doc = document.copy()
+            doc.pop('_id')
+            self.data[doc_id] = doc
+    
+    def update_one(self, query, update):
+        if '_id' in query:
+            doc_id = query['_id']
+            if doc_id in self.data:
+                if '$set' in update:
+                    self.data[doc_id].update(update['$set'])
+                elif '$push' in update:
+                    for field, value in update['$push'].items():
+                        if field not in self.data[doc_id]:
+                            self.data[doc_id][field] = []
+                        self.data[doc_id][field].append(value)
+                elif '$pull' in update:
+                    for field, value in update['$pull'].items():
+                        if field in self.data[doc_id] and isinstance(self.data[doc_id][field], list):
+                            self.data[doc_id][field] = [x for x in self.data[doc_id][field] if x != value]
+    
+    def count_documents(self, query=None):
+        return len(self.find(query or {}))
+    
+    def aggregate(self, pipeline):
+        # Simple aggregation for getting unique days
+        if len(pipeline) >= 2 and pipeline[0].get('$unwind') == '$schedule_details.days':
+            days = set()
+            for value in self.data.values():
+                if 'schedule_details' in value and 'days' in value['schedule_details']:
+                    for day in value['schedule_details']['days']:
+                        days.add(day)
+            return [{'_id': day} for day in sorted(days)]
+        return []
+
+# Use in-memory collections
+activities_collection = InMemoryCollection()
+teachers_collection = InMemoryCollection()
 
 # Methods
 def hash_password(password):
@@ -52,7 +143,8 @@ initial_activities = {
             "end_time": "08:00"
         },
         "max_participants": 20,
-        "participants": ["emma@mergington.edu", "sophia@mergington.edu"]
+        "participants": ["emma@mergington.edu", "sophia@mergington.edu"],
+        "difficulty": "Beginner"
     },
     "Morning Fitness": {
         "description": "Early morning physical training and exercises",
@@ -118,7 +210,8 @@ initial_activities = {
             "end_time": "08:00"
         },
         "max_participants": 10,
-        "participants": ["james@mergington.edu", "benjamin@mergington.edu"]
+        "participants": ["james@mergington.edu", "benjamin@mergington.edu"],
+        "difficulty": "Intermediate"
     },
     "Debate Team": {
         "description": "Develop public speaking and argumentation skills",
@@ -140,7 +233,8 @@ initial_activities = {
             "end_time": "14:00"
         },
         "max_participants": 15,
-        "participants": ["ethan@mergington.edu", "oliver@mergington.edu"]
+        "participants": ["ethan@mergington.edu", "oliver@mergington.edu"],
+        "difficulty": "Advanced"
     },
     "Science Olympiad": {
         "description": "Weekend science competition preparation for regional and state events",
@@ -162,7 +256,8 @@ initial_activities = {
             "end_time": "17:00"
         },
         "max_participants": 16,
-        "participants": ["william@mergington.edu", "jacob@mergington.edu"]
+        "participants": ["william@mergington.edu", "jacob@mergington.edu"],
+        "difficulty": "Advanced"
     }
 }
 
