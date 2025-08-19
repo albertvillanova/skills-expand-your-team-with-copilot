@@ -1,0 +1,176 @@
+name: 💡 Feature Request
+description: Suggest a new feature or improvement for the activities system
+title: "[FEATURE] "
+labels: ["enhancement", "feature-request", "teacher-request"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Feature Request
+        
+        Use this template to suggest new features or improvements to make the activities system more useful for teachers and students.
+        
+        **For Copilot Agent:** This is a feature request that needs careful analysis of requirements and implementation approach. Consider existing system architecture and maintainability.
+
+  - type: dropdown
+    id: feature_area
+    attributes:
+      label: What area of the system would this feature affect?
+      description: Where would this new feature be used?
+      options:
+        - Student registration/signup process
+        - Teacher management tools
+        - Activity information display
+        - Student communication/notifications
+        - Reporting and analytics
+        - Search and filtering
+        - Mobile/accessibility improvements
+        - User interface improvements
+        - Data export/import
+        - Other (describe below)
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem_description
+    attributes:
+      label: What problem does this solve?
+      description: Describe the current situation and why it needs improvement
+      placeholder: "e.g., Teachers currently can't see which students are on waiting lists for popular activities, making it hard to manage capacity"
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed_solution
+    attributes:
+      label: Proposed Solution
+      description: Describe what you'd like to see added or changed
+      placeholder: "e.g., Add a waiting list feature that automatically notifies the next student when a spot opens up"
+    validations:
+      required: true
+
+  - type: textarea
+    id: user_story
+    attributes:
+      label: User Story
+      description: Describe how this feature would be used in practice
+      placeholder: |
+        As a teacher, I want to...
+        So that I can...
+        
+        Example:
+        As a teacher, I want to export a list of all students in my activities
+        So that I can create attendance sheets and send communication to parents
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: How important is this feature?
+      description: How would you prioritize this request?
+      options:
+        - Critical (needed immediately)
+        - High (would really help)
+        - Medium (nice to have)
+        - Low (minor improvement)
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: affected_users
+    attributes:
+      label: Who would benefit from this feature?
+      description: Select all that apply
+      options:
+        - label: Teachers/Staff
+        - label: Students
+        - label: Parents
+        - label: Administrators
+        - label: IT Support
+
+  - type: textarea
+    id: acceptance_criteria
+    attributes:
+      label: Success Criteria
+      description: How would you know this feature is working correctly?
+      placeholder: |
+        Example:
+        - Students can join a waiting list when an activity is full
+        - Teachers receive notification when students join/leave waiting list
+        - When a spot opens, the first student on the waiting list is automatically notified
+        - Teachers can view and manage the waiting list
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternative_solutions
+    attributes:
+      label: Alternative Solutions
+      description: Have you considered other ways to solve this problem?
+      placeholder: "e.g., Instead of automatic notifications, teachers could manually contact students"
+
+  - type: dropdown
+    id: technical_complexity
+    attributes:
+      label: Technical Complexity (if known)
+      description: How complex do you think this feature would be to implement?
+      options:
+        - Simple (small change to existing functionality)
+        - Medium (new functionality but uses existing patterns)
+        - Complex (requires significant new development)
+        - Not sure
+
+  - type: textarea
+    id: examples
+    attributes:
+      label: Examples or References
+      description: Any examples from other systems or detailed scenarios?
+      placeholder: "e.g., Similar to how Google Classroom handles assignment submissions, or like the registration system at Central High School"
+
+  - type: textarea
+    id: additional_context
+    attributes:
+      label: Additional Context
+      description: Any other information that would help understand this request?
+      placeholder: "e.g., This would help during peak registration periods, addresses complaints from parents, required for compliance with school district policies"
+
+  - type: markdown
+    attributes:
+      value: |
+        ## Implementation Notes for Copilot Agent
+        
+        **Analysis Required:**
+        - [ ] Assess technical feasibility within current system architecture
+        - [ ] Identify impact on existing functionality
+        - [ ] Estimate development complexity and effort
+        - [ ] Consider user experience and interface changes needed
+        - [ ] Evaluate database schema changes if required
+        
+        **Implementation Approach:**
+        1. **Requirements Analysis:** Break down the feature into specific, testable requirements
+        2. **Design Review:** Consider how this fits with existing code structure and patterns
+        3. **Database Impact:** Determine if new fields or collections are needed
+        4. **API Changes:** Identify new endpoints or modifications to existing ones
+        5. **Frontend Updates:** Plan user interface changes and user experience flow
+        6. **Testing Strategy:** Define how to validate the feature works correctly
+        
+        **Technical Considerations:**
+        - **Backend:** May need updates to `src/backend/routers/activities.py` and `database.py`
+        - **Frontend:** Likely requires changes to `src/static/app.js` and `index.html`
+        - **Data Model:** Consider impact on `initial_activities` structure and MongoDB schema
+        - **Authentication:** Ensure proper teacher/student permissions are maintained
+        - **Performance:** Consider impact on page load and database queries
+        
+        **Implementation Priority:**
+        - Focus on core functionality first
+        - Ensure minimal disruption to existing features
+        - Consider phased implementation for complex features
+        - Maintain system simplicity and ease of maintenance
+        
+        **Validation:**
+        - Implement feature according to acceptance criteria
+        - Test all user scenarios described
+        - Verify no regression in existing functionality
+        - Ensure feature works across different browsers/devices

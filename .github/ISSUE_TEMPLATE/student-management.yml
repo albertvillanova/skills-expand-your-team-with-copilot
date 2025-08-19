@@ -1,0 +1,190 @@
+name: 👥 Student Management Issue
+description: Report problems with student registration, removal, or participant management
+title: "[STUDENT MGMT] "
+labels: ["student-management", "teacher-request"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Student Management Issue
+        
+        Use this template to report issues with managing student registrations, including problems adding or removing students from activities.
+        
+        **For Copilot Agent:** This issue involves student registration management functionality. Focus on the `signup_for_activity()` and `unregister_from_activity()` functions in `src/backend/routers/activities.py`.
+
+  - type: dropdown
+    id: issue_type
+    attributes:
+      label: What type of student management issue?
+      description: Select the type of problem you're experiencing
+      options:
+        - Cannot register student for activity
+        - Cannot remove student from activity
+        - Student appears registered but shouldn't be
+        - Student doesn't appear in participant list
+        - Duplicate student registrations
+        - Registration limits not working correctly
+        - Student registered for conflicting activities
+        - Other (describe below)
+    validations:
+      required: true
+
+  - type: input
+    id: student_email
+    attributes:
+      label: Student Email
+      description: What is the student's email address?
+      placeholder: "e.g., student@mergington.edu"
+    validations:
+      required: true
+
+  - type: input
+    id: activity_name
+    attributes:
+      label: Activity Name
+      description: Which activity is involved?
+      placeholder: "e.g., Chess Club, Soccer Team"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: desired_action
+    attributes:
+      label: What are you trying to do?
+      description: What action were you attempting?
+      options:
+        - Register student for activity
+        - Remove student from activity
+        - Check student's registration status
+        - View participant list
+        - Other (describe below)
+    validations:
+      required: true
+
+  - type: textarea
+    id: what_happened
+    attributes:
+      label: What happened?
+      description: Describe exactly what occurred when you tried to perform the action
+      placeholder: "e.g., When I clicked 'Register Student' and entered the email, I got an error message saying 'Authentication required'"
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected_result
+    attributes:
+      label: What should have happened?
+      description: Describe what you expected to occur
+      placeholder: "e.g., The student should have been added to the participant list and I should see a success message"
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: verification_steps
+    attributes:
+      label: Verification Steps Taken
+      description: Have you verified the following? (Check all that apply)
+      options:
+        - label: Student email is spelled correctly
+        - label: Activity name is correct
+        - label: I am logged in as a teacher
+        - label: The activity is not already full
+        - label: Student is not already registered for this activity
+        - label: Student is not registered for a conflicting time slot
+
+  - type: textarea
+    id: error_message
+    attributes:
+      label: Error Message (if any)
+      description: If you received an error message, please copy it exactly
+      placeholder: "e.g., HTTP 400 Error: Already signed up for this activity"
+
+  - type: dropdown
+    id: frequency
+    attributes:
+      label: How often does this happen?
+      description: Is this a one-time issue or recurring problem?
+      options:
+        - First time I've seen this
+        - Happens occasionally with some students
+        - Happens frequently
+        - Happens with all students
+        - Happens only with this activity
+    validations:
+      required: true
+
+  - type: textarea
+    id: current_status
+    attributes:
+      label: Current Status
+      description: What is the current registration status of this student?
+      placeholder: "e.g., Student shows as registered but can't access the activity, student is not in the list but claims to be registered"
+
+  - type: input
+    id: teacher_username
+    attributes:
+      label: Your Teacher Username
+      description: What username are you logged in with?
+      placeholder: "e.g., mrodriguez, mchen"
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional_context
+    attributes:
+      label: Additional Information
+      description: Any other relevant details about this issue?
+      placeholder: "e.g., This student was previously registered but removed, other teachers report similar issues, this affects multiple activities"
+
+  - type: markdown
+    attributes:
+      value: |
+        ## Implementation Notes for Copilot Agent
+        
+        **Acceptance Criteria:**
+        - [ ] Identify and fix the specific student registration issue
+        - [ ] Verify student can be properly registered/unregistered
+        - [ ] Ensure error messages are clear and helpful
+        - [ ] Test that the fix doesn't affect other students or activities
+        - [ ] Confirm teacher authentication is working correctly
+        
+        **Investigation Areas:**
+        
+        **1. Authentication Issues:**
+        - Check teacher login validation in `signup_for_activity()` function
+        - Verify `teacher_username` parameter is being passed correctly
+        - Review teacher credentials in `teachers_collection`
+        
+        **2. Registration Logic:**
+        - Examine `signup_for_activity()` in `src/backend/routers/activities.py`
+        - Check participant validation logic (duplicate detection)
+        - Review max_participants limit enforcement
+        - Verify MongoDB update operations
+        
+        **3. Unregistration Logic:**
+        - Review `unregister_from_activity()` function
+        - Check participant removal logic
+        - Verify student exists in participants list before removal
+        
+        **4. Data Validation:**
+        - Verify email format validation
+        - Check activity name matching (case sensitivity, exact match)
+        - Ensure activity exists in database
+        
+        **5. Frontend Issues:**
+        - Review JavaScript in `src/static/app.js` for form submission
+        - Check error message display logic
+        - Verify teacher authentication state management
+        
+        **Common Issues & Solutions:**
+        - **"Authentication required":** Check if teacher_username is properly passed and valid
+        - **"Already signed up":** Verify participant list doesn't contain duplicates
+        - **"Activity not found":** Ensure exact activity name match (case sensitive)
+        - **"Failed to update":** Check MongoDB connection and update query
+        
+        **Testing Requirements:**
+        - Test the specific student/activity combination mentioned
+        - Verify fix works with different teachers
+        - Test edge cases (full activities, invalid emails, etc.)
+        - Confirm existing registrations are not affected

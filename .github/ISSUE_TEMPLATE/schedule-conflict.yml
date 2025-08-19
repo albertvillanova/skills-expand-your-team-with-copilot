@@ -1,0 +1,199 @@
+name: ⏰ Schedule Conflict or Time Issue
+description: Report scheduling conflicts between activities or time-related problems
+title: "[SCHEDULE] "
+labels: ["schedule", "teacher-request", "time-conflict"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Schedule Conflict or Time Issue
+        
+        Use this template to report problems with activity schedules, time conflicts, or timing-related issues that affect students or teachers.
+        
+        **For Copilot Agent:** This issue involves activity scheduling and time management. Focus on schedule_details in `src/backend/database.py` and time filtering in the frontend.
+
+  - type: dropdown
+    id: issue_type
+    attributes:
+      label: What type of schedule issue?
+      description: Select the type of scheduling problem
+      options:
+        - Activities scheduled at the same time (conflict)
+        - Activity time needs to be changed
+        - Schedule display is incorrect
+        - Student signed up for conflicting activities
+        - Time filter not working properly
+        - Schedule format is confusing
+        - Weekend/weekday categorization wrong
+        - Other (describe below)
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: affected_activities
+    attributes:
+      label: Which activities are involved?
+      description: Select all activities that are part of this scheduling issue
+      options:
+        - label: Chess Club
+        - label: Programming Class
+        - label: Morning Fitness
+        - label: Soccer Team
+        - label: Basketball Team
+        - label: Art Club
+        - label: Math Olympiad
+        - label: Debate Team
+        - label: Weekend Robotics Workshop
+        - label: Science Olympiad
+        - label: Sunday Chess Tournament
+        - label: Other (specify below)
+
+  - type: textarea
+    id: schedule_problem
+    attributes:
+      label: Describe the Schedule Problem
+      description: Explain what's wrong with the current schedule
+      placeholder: "e.g., Chess Club and Math Olympiad both meet on Tuesday mornings, making it impossible for students to participate in both"
+    validations:
+      required: true
+
+  - type: textarea
+    id: current_schedule
+    attributes:
+      label: Current Schedule Details
+      description: What are the current meeting times for the affected activities?
+      placeholder: |
+        e.g., 
+        Chess Club: Mondays and Fridays, 3:15 PM - 4:45 PM
+        Math Olympiad: Tuesdays, 7:15 AM - 8:00 AM
+    validations:
+      required: true
+
+  - type: textarea
+    id: preferred_schedule
+    attributes:
+      label: Preferred/Suggested Schedule
+      description: What schedule would work better?
+      placeholder: |
+        e.g.,
+        Chess Club: Keep current time
+        Math Olympiad: Change to Thursdays, 7:15 AM - 8:00 AM
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: affected_students
+    attributes:
+      label: Impact on Students
+      description: How does this schedule issue affect students? (Select all that apply)
+      options:
+        - label: Students can't participate in multiple desired activities
+        - label: Schedule conflicts with other school requirements
+        - label: Transportation issues (too early/late)
+        - label: Conflicts with sports practice/games
+        - label: Affects academic class schedule
+        - label: Conflicts with family commitments
+        - label: Other (explain below)
+
+  - type: textarea
+    id: student_examples
+    attributes:
+      label: Specific Student Impact
+      description: Provide examples of how students are affected (no need for names)
+      placeholder: "e.g., Three students want to join both Chess Club and Programming Class but they overlap on Tuesday mornings"
+
+  - type: dropdown
+    id: urgency
+    attributes:
+      label: How urgent is this schedule change?
+      description: When does this need to be resolved?
+      options:
+        - Immediate (affects current activities)
+        - This week (needed for next session)
+        - Next month (for next enrollment period)
+        - Next semester/quarter
+        - Future planning
+    validations:
+      required: true
+
+  - type: textarea
+    id: constraints
+    attributes:
+      label: Scheduling Constraints
+      description: Are there any limitations on when activities can be scheduled?
+      placeholder: "e.g., gym is only available after 3 PM, teacher only available on certain days, conflicts with other school events"
+
+  - type: checkboxes
+    id: time_categories
+    attributes:
+      label: Time Category Issues
+      description: Are there problems with how activities are categorized by time? (Select if applicable)
+      options:
+        - label: Activity shows in wrong time filter (Before School/After School/Weekend)
+        - label: Time display format is confusing
+        - label: Schedule details don't match display
+        - label: Mobile/tablet time display issues
+
+  - type: textarea
+    id: additional_context
+    attributes:
+      label: Additional Information
+      description: Any other relevant details about this scheduling issue?
+      placeholder: "e.g., This affects the most popular activities, conflicts with district-wide events, room availability concerns"
+
+  - type: markdown
+    attributes:
+      value: |
+        ## Implementation Notes for Copilot Agent
+        
+        **Acceptance Criteria:**
+        - [ ] Identify and resolve the specific schedule conflict or time issue
+        - [ ] Update activity schedules in the database if needed
+        - [ ] Ensure schedule changes are reflected in both display formats
+        - [ ] Verify time filtering and categorization work correctly
+        - [ ] Test that students can access updated schedules
+        
+        **Technical Areas to Investigate:**
+        
+        **1. Database Schedule Updates:**
+        - Modify `initial_activities` in `src/backend/database.py`
+        - Update both `schedule` (human-readable) and `schedule_details` (structured data)
+        - Ensure time format consistency (24-hour format: HH:MM)
+        - Verify days array matches the schedule description
+        
+        **2. Schedule Display Issues:**
+        - Check schedule rendering in `src/static/app.js`
+        - Review time formatting functions
+        - Verify schedule_details parsing
+        - Test mobile/responsive display
+        
+        **3. Time Filtering Problems:**
+        - Review `getActivityType()` function in `app.js`
+        - Check time-based filtering logic for Before School/After School/Weekend
+        - Verify filter buttons work correctly
+        - Test edge cases (early morning, late evening activities)
+        
+        **4. Conflict Detection:**
+        - Consider implementing logic to detect schedule conflicts
+        - Check if students are registered for overlapping activities
+        - Validate day/time combinations
+        
+        **Schedule Format Requirements:**
+        - **Human-readable schedule:** "Days, start_time - end_time" format
+        - **schedule_details object:**
+          - `days`: Array of day names (e.g., ["Monday", "Friday"])
+          - `start_time`: 24-hour format (e.g., "15:15")
+          - `end_time`: 24-hour format (e.g., "16:45")
+        
+        **Time Categories:**
+        - **Before School:** Activities starting before 8:00 AM
+        - **After School:** Activities starting after 2:00 PM on weekdays
+        - **Weekend:** Activities on Saturday or Sunday
+        
+        **Testing Requirements:**
+        - Verify schedule changes display correctly on the main page
+        - Test time filtering with updated schedules
+        - Check mobile/tablet display of schedule information
+        - Confirm no conflicts with existing student registrations
+        - Test that schedule updates persist after server restart

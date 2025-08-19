@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 📚 Development Guide
+    url: https://github.com/albertvillanova/skills-expand-your-team-with-copilot/blob/main/docs/how-to-develop.md
+    about: Learn how to set up and develop the application
+  - name: 💬 General Questions
+    url: https://github.com/albertvillanova/skills-expand-your-team-with-copilot/discussions
+    about: Ask questions or discuss ideas with the community
